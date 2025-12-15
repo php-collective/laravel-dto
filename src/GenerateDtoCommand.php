@@ -47,9 +47,18 @@ class GenerateDtoCommand extends Command
 
     private function detectEngine(string $configPath): PhpEngine|XmlEngine|YamlEngine
     {
-        if (file_exists($configPath . '/dto.php')) {
+        // Check for dtos.* files first (recommended to avoid Laravel config conflict)
+        if (file_exists($configPath . '/dtos.php')) {
             return new PhpEngine();
         }
+        if (file_exists($configPath . '/dtos.xml')) {
+            return new XmlEngine();
+        }
+        if (file_exists($configPath . '/dtos.yml') || file_exists($configPath . '/dtos.yaml')) {
+            return new YamlEngine();
+        }
+
+        // Fall back to dto.* files
         if (file_exists($configPath . '/dto.xml')) {
             return new XmlEngine();
         }
