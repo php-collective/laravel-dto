@@ -26,6 +26,14 @@ class GenerateDtoCommand extends Command
         $outputPath = config('dto.output_path', app_path('Dto'));
         $namespace = config('dto.namespace', 'App\\Dto');
 
+        // Ensure paths end with /
+        if (!str_ends_with($configPath, '/')) {
+            $configPath .= '/';
+        }
+        if (!str_ends_with($outputPath, '/')) {
+            $outputPath .= '/';
+        }
+
         $config = new ArrayConfig([
             'namespace' => $namespace,
             'dryRun' => $this->option('dry-run'),
@@ -47,23 +55,39 @@ class GenerateDtoCommand extends Command
 
     private function detectEngine(string $configPath): PhpEngine|XmlEngine|YamlEngine
     {
+        $sep = str_ends_with($configPath, '/') ? '' : '/';
+
         // Check for dtos.* files first (recommended to avoid Laravel config conflict)
-        if (file_exists($configPath . '/dtos.php')) {
+        if (file_exists($configPath . $sep . 'dtos.php')) {
             return new PhpEngine();
         }
-        if (file_exists($configPath . '/dtos.xml')) {
+        if (file_exists($configPath . $sep . 'dtos.xml')) {
             return new XmlEngine();
         }
-        if (file_exists($configPath . '/dtos.yml') || file_exists($configPath . '/dtos.yaml')) {
+        if (file_exists($configPath . $sep . 'dtos.yml') || file_exists($configPath . $sep . 'dtos.yaml')) {
             return new YamlEngine();
         }
 
-        // Fall back to dto.* files
-        if (file_exists($configPath . '/dto.xml')) {
+        // Fall back to dto.* files (XML/YAML only - dto.php conflicts with Laravel config)
+        if (file_exists($configPath . $sep . 'dto.xml')) {
             return new XmlEngine();
         }
-        if (file_exists($configPath . '/dto.yml') || file_exists($configPath . '/dto.yaml')) {
+        if (file_exists($configPath . $sep . 'dto.yml') || file_exists($configPath . $sep . 'dto.yaml')) {
             return new YamlEngine();
+        }
+
+        // Check for dto/ subdirectory
+        if (is_dir($configPath . $sep . 'dto')) {
+            $dtoDir = $configPath . $sep . 'dto/';
+            if (glob($dtoDir . '*.php')) {
+                return new PhpEngine();
+            }
+            if (glob($dtoDir . '*.xml')) {
+                return new XmlEngine();
+            }
+            if (glob($dtoDir . '*.yml') || glob($dtoDir . '*.yaml')) {
+                return new YamlEngine();
+            }
         }
 
         return new PhpEngine();
