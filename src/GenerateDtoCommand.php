@@ -16,8 +16,7 @@ use PhpCollective\Dto\Generator\TwigRenderer;
 class GenerateDtoCommand extends Command
 {
     protected $signature = 'dto:generate
-                            {--dry-run : Preview changes without writing files}
-                            {--verbose : Show detailed output}';
+                            {--dry-run : Preview changes without writing files}';
 
     protected $description = 'Generate DTO classes from configuration';
 
@@ -30,7 +29,7 @@ class GenerateDtoCommand extends Command
         $config = new ArrayConfig([
             'namespace' => $namespace,
             'dryRun' => $this->option('dry-run'),
-            'verbose' => $this->option('verbose'),
+            'verbose' => $this->getOutput()->isVerbose(),
         ]);
 
         $engine = $this->detectEngine($configPath);
