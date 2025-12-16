@@ -17,6 +17,7 @@ class DtoServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateDtoCommand::class,
+                InitDtoCommand::class,
             ]);
 
             $this->publishes([

@@ -70,6 +70,14 @@ class GenerateDtoCommandTest extends TestCase
         $commands = Artisan::all();
 
         $this->assertArrayHasKey('dto:generate', $commands);
+        $this->assertArrayHasKey('dto:init', $commands);
+    }
+
+    public function testCommandFailsWhenNoConfigFound(): void
+    {
+        $this->artisan('dto:generate')
+            ->assertFailed()
+            ->expectsOutputToContain('No DTO configuration files found');
     }
 
     public function testCommandWithDryRun(): void
@@ -113,5 +121,29 @@ XML;
         $content = file_get_contents($this->tempDir . '/output/Dto/UserDto.php');
         $this->assertStringContainsString('namespace TestApp\\Dto', $content);
         $this->assertStringContainsString('class UserDto', $content);
+    }
+
+    public function testCommandWithCustomOptions(): void
+    {
+        $configContent = <<<'XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<dtos xmlns="php-collective-dto">
+    <dto name="Product">
+        <field name="id" type="int"/>
+    </dto>
+</dtos>
+XML;
+        file_put_contents($this->tempDir . '/config/dto.xml', $configContent);
+
+        $this->artisan('dto:generate', [
+            '--config-path' => $this->tempDir . '/config',
+            '--output-path' => $this->tempDir . '/output',
+            '--namespace' => 'Custom\\Dto',
+        ])->assertSuccessful();
+
+        $this->assertFileExists($this->tempDir . '/output/Dto/ProductDto.php');
+
+        $content = file_get_contents($this->tempDir . '/output/Dto/ProductDto.php');
+        $this->assertStringContainsString('namespace Custom\\Dto', $content);
     }
 }
