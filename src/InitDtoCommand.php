@@ -22,7 +22,8 @@ class InitDtoCommand extends Command
 
     public function handle(): int
     {
-        $format = strtolower((string)$this->option('format'));
+        $formatOption = $this->option('format');
+        $format = is_string($formatOption) ? strtolower($formatOption) : 'php';
         $configPath = config('dto.config_path', config_path());
 
         if (!in_array($format, ['php', 'xml', 'yaml', 'yml'], true)) {
