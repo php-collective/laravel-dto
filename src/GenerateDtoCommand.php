@@ -20,7 +20,7 @@ class GenerateDtoCommand extends Command
      */
     protected $signature = 'dto:generate
         {--dry-run : Preview changes without writing files}
-        {--force : Force regeneration of all DTOs}
+        {--f|force : Force regeneration of all DTOs}
         {--config-path= : Path to DTO config files}
         {--output-path= : Path for generated DTOs}
         {--namespace= : Namespace for generated DTOs}';

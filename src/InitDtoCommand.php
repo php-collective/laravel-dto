@@ -13,7 +13,7 @@ class InitDtoCommand extends Command
      */
     protected $signature = 'dto:init
         {--format=php : Config format (php, xml, yaml)}
-        {--force : Overwrite existing config file}';
+        {--f|force : Overwrite existing config file}';
 
     /**
      * @var string
