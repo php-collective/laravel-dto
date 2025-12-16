@@ -25,18 +25,19 @@ class GenerateDtoCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->tempDir = sys_get_temp_dir() . '/laravel_dto_test_' . uniqid();
+        $this->tempDir = sys_get_temp_dir() . '/laravel_dto_test_' . getmypid();
+        $this->removeDirectory($this->tempDir);
         mkdir($this->tempDir, 0777, true);
         mkdir($this->tempDir . '/config', 0777, true);
         mkdir($this->tempDir . '/output', 0777, true);
+
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
-        $this->removeDirectory($this->tempDir);
         parent::tearDown();
+        $this->removeDirectory($this->tempDir);
     }
 
     protected function removeDirectory(string $dir): void
@@ -44,7 +45,7 @@ class GenerateDtoCommandTest extends TestCase
         if (!is_dir($dir)) {
             return;
         }
-        $files = array_diff(scandir($dir), ['.', '..']);
+        $files = array_diff((array)scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = $dir . '/' . $file;
             is_dir($path) ? $this->removeDirectory($path) : unlink($path);
@@ -57,8 +58,9 @@ class GenerateDtoCommandTest extends TestCase
      */
     protected function defineEnvironment($app): void
     {
-        $app['config']->set('dto.config_path', $this->tempDir . '/config');
-        $app['config']->set('dto.output_path', $this->tempDir . '/output');
+        $tempDir = sys_get_temp_dir() . '/laravel_dto_test_' . getmypid();
+        $app['config']->set('dto.config_path', $tempDir . '/config');
+        $app['config']->set('dto.output_path', $tempDir . '/output');
         $app['config']->set('dto.namespace', 'TestApp\\Dto');
     }
 

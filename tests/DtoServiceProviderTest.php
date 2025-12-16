@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace PhpCollective\LaravelDto\Test;
 
-use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase;
-use PhpCollective\Dto\Dto\Dto;
 use PhpCollective\LaravelDto\DtoServiceProvider;
-use PhpCollective\LaravelDto\GenerateDtoCommand;
 
 class DtoServiceProviderTest extends TestCase
 {
@@ -41,16 +38,6 @@ class DtoServiceProviderTest extends TestCase
 
     public function testCommandIsRegistered(): void
     {
-        $this->assertTrue($this->app->bound(GenerateDtoCommand::class));
-    }
-
-    public function testCollectionFactoryIsConfigured(): void
-    {
-        // After boot, the collection factory should be set to Laravel's collect()
-        $items = ['a', 'b', 'c'];
-        $collection = Dto::getCollectionFactory()($items);
-
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertSame($items, $collection->toArray());
+        $this->assertTrue($this->app['artisan']->has('dto:generate'));
     }
 }

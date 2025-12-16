@@ -51,7 +51,10 @@ class GenerateDtoCommand extends Command
         $io = new LaravelConsoleIo($this);
 
         $generator = new Generator($builder, $renderer, $io, $config);
-        $generator->generate($configPath, $outputPath);
+        $generator->generate($configPath, $outputPath, [
+            'dryRun' => $this->option('dry-run'),
+            'verbose' => $this->getOutput()->isVerbose(),
+        ]);
 
         $this->info('DTOs generated successfully.');
 
