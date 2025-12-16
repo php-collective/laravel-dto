@@ -22,7 +22,7 @@ class InitDtoCommand extends Command
 
     public function handle(): int
     {
-        $format = strtolower($this->option('format'));
+        $format = strtolower((string)$this->option('format'));
         $configPath = config('dto.config_path', config_path());
 
         if (!in_array($format, ['php', 'xml', 'yaml', 'yml'], true)) {
@@ -67,7 +67,7 @@ class InitDtoCommand extends Command
         return match ($format) {
             'php' => $this->getPhpConfig(),
             'xml' => $this->getXmlConfig(),
-            'yaml' => $this->getYamlConfig(),
+            default => $this->getYamlConfig(),
         };
     }
 
