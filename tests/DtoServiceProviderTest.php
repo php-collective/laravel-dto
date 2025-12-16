@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpCollective\LaravelDto\Test;
 
+use Illuminate\Support\Facades\Artisan;
 use Orchestra\Testbench\TestCase;
 use PhpCollective\LaravelDto\DtoServiceProvider;
 
@@ -38,6 +39,8 @@ class DtoServiceProviderTest extends TestCase
 
     public function testCommandIsRegistered(): void
     {
-        $this->assertTrue($this->app['artisan']->has('dto:generate'));
+        $commands = Artisan::all();
+
+        $this->assertArrayHasKey('dto:generate', $commands);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpCollective\LaravelDto\Test;
 
+use Illuminate\Support\Facades\Artisan;
 use Orchestra\Testbench\TestCase;
 use PhpCollective\LaravelDto\DtoServiceProvider;
 
@@ -66,7 +67,9 @@ class GenerateDtoCommandTest extends TestCase
 
     public function testCommandExists(): void
     {
-        $this->assertTrue($this->app['artisan']->has('dto:generate'));
+        $commands = Artisan::all();
+
+        $this->assertArrayHasKey('dto:generate', $commands);
     }
 
     public function testCommandWithDryRun(): void
