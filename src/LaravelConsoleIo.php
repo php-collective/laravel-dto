@@ -9,9 +9,8 @@ use PhpCollective\Dto\Generator\IoInterface;
 
 class LaravelConsoleIo implements IoInterface
 {
-    public function __construct(
-        private Command $command,
-    ) {
+    public function __construct(private Command $command)
+    {
     }
 
     /**

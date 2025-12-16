@@ -15,9 +15,14 @@ use PhpCollective\Dto\Generator\TwigRenderer;
 
 class GenerateDtoCommand extends Command
 {
-    protected $signature = 'dto:generate
-                            {--dry-run : Preview changes without writing files}';
+    /**
+     * @var string
+     */
+    protected $signature = 'dto:generate {--dry-run : Preview changes without writing files}';
 
+    /**
+     * @var string
+     */
     protected $description = 'Generate DTO classes from configuration';
 
     public function handle(): int
