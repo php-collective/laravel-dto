@@ -16,6 +16,7 @@
 .gitignore text eol=lf
 
 # Exclude from export (composer --prefer-dist)
+/.github export-ignore
 /tests export-ignore
 .editorconfig export-ignore
 .gitattributes export-ignore
