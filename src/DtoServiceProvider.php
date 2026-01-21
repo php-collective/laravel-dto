@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace PhpCollective\LaravelDto;
 
 use Illuminate\Support\ServiceProvider;
+use PhpCollective\Dto\Collection\CollectionAdapterRegistry;
 use PhpCollective\Dto\Dto\Dto;
+use PhpCollective\LaravelDto\Collection\LaravelCollectionAdapter;
 
 class DtoServiceProvider extends ServiceProvider
 {
@@ -13,6 +15,9 @@ class DtoServiceProvider extends ServiceProvider
     {
         // Auto-configure Laravel collections for DTO collection fields
         Dto::setCollectionFactory(fn (array $items) => collect($items));
+
+        // Register Laravel collection adapter for proper template generation
+        CollectionAdapterRegistry::register(new LaravelCollectionAdapter());
 
         if ($this->app->runningInConsole()) {
             $this->commands([
