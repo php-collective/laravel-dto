@@ -181,7 +181,13 @@ parameters:
         - app/Dto/
 ```
 
-Alternatively, you can avoid exclusions altogether by generating DTOs into a separate directory outside `app/` (e.g. `generated/`). This requires a custom PSR-4 autoload entry in your `composer.json`:
+Alternatively, you can avoid exclusions altogether by generating DTOs into a separate directory outside `app/` (e.g. `generated/`). Update your `config/dto.php`:
+
+```php
+'output_path' => base_path('generated'),
+```
+
+Then add a PSR-4 autoload entry in your `composer.json`:
 
 ```json
 {
