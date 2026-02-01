@@ -181,6 +181,20 @@ parameters:
         - app/Dto/
 ```
 
+Alternatively, you can avoid exclusions altogether by generating DTOs into a separate directory outside `app/` (e.g. `generated/`). This requires a custom PSR-4 autoload entry in your `composer.json`:
+
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "App\\Dto\\": "generated/"
+        }
+    }
+}
+```
+
+See the base package's [SeparatingGeneratedCode.md](https://github.com/php-collective/dto/blob/master/docs/SeparatingGeneratedCode.md) for details.
+
 ## Composer Scripts
 
 You can add convenience scripts to your `composer.json`:
