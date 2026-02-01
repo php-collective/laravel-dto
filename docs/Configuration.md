@@ -47,6 +47,30 @@ return [
 
 ## DTO Definition Formats
 
+### PHP Format (default)
+
+Create `config/dtos.php` (use `dtos.php` to avoid conflict with package config).
+This is the default format when running `php artisan dto:init`:
+
+```php
+use PhpCollective\Dto\Builder\Dto;
+use PhpCollective\Dto\Builder\Field;
+use PhpCollective\Dto\Builder\Schema;
+
+return Schema::create()
+    ->dto(Dto::create('User')->fields(
+        Field::int('id'),
+        Field::string('name'),
+        Field::string('email')->nullable(),
+        Field::array('roles', 'Role'),
+    ))
+    ->dto(Dto::create('Role')->fields(
+        Field::int('id'),
+        Field::string('name'),
+    ))
+    ->toArray();
+```
+
 ### XML Format
 
 Create `config/dto.xml` or `config/dtos.xml`:
@@ -84,29 +108,6 @@ Role:
   fields:
     id: int
     name: string
-```
-
-### PHP Format
-
-Create `config/dtos.php` (use `dtos.php` to avoid conflict with package config):
-
-```php
-use PhpCollective\Dto\Builder\Dto;
-use PhpCollective\Dto\Builder\Field;
-use PhpCollective\Dto\Builder\Schema;
-
-return Schema::create()
-    ->dto(Dto::create('User')->fields(
-        Field::int('id'),
-        Field::string('name'),
-        Field::string('email')->nullable(),
-        Field::array('roles', 'Role'),
-    ))
-    ->dto(Dto::create('Role')->fields(
-        Field::int('id'),
-        Field::string('name'),
-    ))
-    ->toArray();
 ```
 
 ## Command Options

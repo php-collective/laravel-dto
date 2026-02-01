@@ -35,15 +35,50 @@ public function show(int $id): JsonResponse
 }
 ```
 
-## Collection Factory
+## Collections
 
-The service provider automatically configures Laravel collections for DTO collection fields:
+The `DtoServiceProvider` automatically registers Laravel's `Illuminate\Support\Collection` as the collection type for DTO collection fields. No manual setup is needed.
+
+### Defining Collection Fields
+
+In your DTO config, use the `[]` suffix to define collection fields:
+
+```xml
+<dto name="User">
+    <field name="id" type="int"/>
+    <field name="name" type="string"/>
+    <field name="roles" type="Role[]"/>
+    <field name="tags" type="string[]"/>
+</dto>
+```
+
+After generating, collection fields will use Laravel's `Collection` class:
 
 ```php
-// In your DTO with collection fields
-$activeRoles = $dto->getRoles()->filter(fn ($role) => $role->isActive());
-$roleNames = $dto->getRoles()->pluck('name');
+$user = new UserDto([
+    'id' => 1,
+    'name' => 'John',
+    'roles' => [
+        ['name' => 'admin', 'active' => true],
+        ['name' => 'editor', 'active' => false],
+    ],
+    'tags' => ['vip', 'premium'],
+]);
+
+// Collection methods are available
+$activeRoles = $user->getRoles()->filter(fn (RoleDto $role) => $role->getActive());
+$roleNames = $user->getRoles()->map(fn (RoleDto $role) => $role->getName());
+$tagCount = $user->getTags()->count();
 ```
+
+### What the Adapter Does
+
+The service provider performs two registrations on boot:
+
+1. **Runtime collection factory** — `Dto::setCollectionFactory(fn (array $items) => collect($items))` ensures that collection fields are hydrated as `Illuminate\Support\Collection` instances at runtime.
+2. **Code generation adapter** — `CollectionAdapterRegistry::register(new LaravelCollectionAdapter())` ensures that generated DTO code uses `collect([])` and `->push()` for collection initialization and appending.
+
+Both are required: the factory handles runtime hydration from arrays, while the adapter controls the generated PHP code.
 
 ## Validation
 

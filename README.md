@@ -30,19 +30,29 @@ return [
 
 ## Usage
 
-### 1. Create your DTO configuration
+### 1. Initialize DTO configuration
 
-Create `config/dto.xml` (or `config/dtos.xml` to avoid conflicts):
+```bash
+php artisan dto:init
+```
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<dtos xmlns="php-collective-dto">
-    <dto name="User">
-        <field name="id" type="int"/>
-        <field name="name" type="string"/>
-        <field name="email" type="string"/>
-    </dto>
-</dtos>
+This creates a `config/dtos.php` file with a sample DTO definition (PHP format is the default).
+You can also use `--format=xml` or `--format=yaml`.
+
+The generated config looks like:
+
+```php
+use PhpCollective\Dto\Builder\Dto;
+use PhpCollective\Dto\Builder\Field;
+use PhpCollective\Dto\Builder\Schema;
+
+return Schema::create()
+    ->dto(Dto::create('User')->fields(
+        Field::int('id'),
+        Field::string('name'),
+        Field::string('email')->nullable(),
+    ))
+    ->toArray();
 ```
 
 ### 2. Generate DTOs
@@ -60,31 +70,33 @@ Options:
 ```php
 use App\Dto\UserDto;
 
-$user = new UserDto();
-$user->setId(1);
-$user->setName('John Doe');
-$user->setEmail('john@example.com');
-
-return response()->json($user->toArray());
-```
-
-Or create from an array:
-
-```php
-$user = UserDto::createFromArray([
+$user = new UserDto([
     'id' => 1,
     'name' => 'John Doe',
     'email' => 'john@example.com',
 ]);
+
+return response()->json($user->toArray());
 ```
+
+## Collections
+
+The service provider automatically registers Laravel's `Illuminate\Support\Collection` for DTO collection fields. Define collection fields with the `[]` suffix:
+
+```php
+Field::array('roles', 'Role'),  // Role[] collection
+Field::array('tags', 'string'), // string[] collection
+```
+
+After generating, collection fields use Laravel's `Collection` class with all its methods (`filter`, `map`, `pluck`, etc.).
 
 ## Supported Config Formats
 
 The package supports multiple config file formats:
 
+- `dtos.php` - PHP format (default, use `dtos.php` to avoid conflict with `config/dto.php`)
 - `dto.xml` or `dtos.xml` - XML format
 - `dto.yml` / `dto.yaml` or `dtos.yml` / `dtos.yaml` - YAML format
-- `dtos.php` - PHP format (use `dtos.php` to avoid conflict with `config/dto.php`)
 - `dto/` subdirectory with multiple files
 
 ## License
