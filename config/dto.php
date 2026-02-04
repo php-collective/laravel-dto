@@ -31,4 +31,24 @@ return [
     |
     */
     'namespace' => 'App\\Dto',
+
+    /*
+    |--------------------------------------------------------------------------
+    | TypeScript Output Path
+    |--------------------------------------------------------------------------
+    |
+    | The path where generated TypeScript interfaces will be written.
+    |
+    */
+    'typescript_output_path' => resource_path('js/types'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | JSON Schema Output Path
+    |--------------------------------------------------------------------------
+    |
+    | The path where generated JSON Schema files will be written.
+    |
+    */
+    'jsonschema_output_path' => resource_path('schemas'),
 ];

@@ -23,6 +23,8 @@ class DtoServiceProvider extends ServiceProvider
             $this->commands([
                 GenerateDtoCommand::class,
                 InitDtoCommand::class,
+                TypeScriptDtoCommand::class,
+                JsonSchemaDtoCommand::class,
             ]);
 
             $this->publishes([
