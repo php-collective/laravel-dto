@@ -6,6 +6,7 @@ namespace PhpCollective\LaravelDto\Test;
 
 use Illuminate\Http\Request;
 use PhpCollective\LaravelDto\Http\DtoResolver;
+use PhpCollective\LaravelDto\Test\Fixtures\DtoResolverTestController;
 use PhpCollective\LaravelDto\Test\Fixtures\TestDto;
 use PHPUnit\Framework\TestCase;
 
@@ -26,12 +27,5 @@ class DtoResolverTest extends TestCase
 
         $this->assertCount(1, $parameters);
         $this->assertSame('dto', $parameters[0]->getName());
-    }
-}
-
-class DtoResolverTestController
-{
-    public function store(TestDto $dto, string $name): void
-    {
     }
 }
