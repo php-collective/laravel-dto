@@ -71,6 +71,8 @@ class GenerateDtoCommandTest extends TestCase
 
         $this->assertArrayHasKey('dto:generate', $commands);
         $this->assertArrayHasKey('dto:init', $commands);
+        $this->assertArrayHasKey('dto:typescript', $commands);
+        $this->assertArrayHasKey('dto:jsonschema', $commands);
     }
 
     public function testCommandFailsWhenNoConfigFound(): void

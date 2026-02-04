@@ -105,19 +105,18 @@ Combine with Form Requests for clean validation:
 
 ```php
 // app/Http/Requests/StoreUserRequest.php
-class StoreUserRequest extends FormRequest
+use PhpCollective\LaravelDto\Http\DtoFormRequest;
+
+class StoreUserRequest extends DtoFormRequest
 {
+    protected string $dtoClass = UserDto::class;
+
     public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
         ];
-    }
-
-    public function toDto(): UserDto
-    {
-        return new UserDto($this->validated());
     }
 }
 
@@ -126,6 +125,39 @@ public function store(StoreUserRequest $request): JsonResponse
 {
     $dto = $request->toDto();
     // ...
+}
+```
+
+If you want to opt into it on a per-request basis, you can use the trait instead:
+
+```php
+use PhpCollective\LaravelDto\Http\CreatesDto;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreUserRequest extends FormRequest
+{
+    use CreatesDto;
+
+    protected string $dtoClass = UserDto::class;
+}
+```
+
+### Automatic DTO injection
+
+Register the resolver once (e.g. in `AppServiceProvider::boot()`):
+
+```php
+use PhpCollective\LaravelDto\Http\DtoResolver;
+
+DtoResolver::register();
+```
+
+Then inject DTOs directly:
+
+```php
+public function store(UserDto $dto): JsonResponse
+{
+    // $dto is built from request data
 }
 ```
 

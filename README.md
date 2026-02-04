@@ -25,6 +25,8 @@ return [
     'config_path' => config_path(),     // Where DTO config files are located
     'output_path' => app_path('Dto'),   // Where to generate DTOs
     'namespace' => 'App\\Dto',          // Namespace for generated DTOs
+    'typescript_output_path' => resource_path('js/types'), // TypeScript output
+    'jsonschema_output_path' => resource_path('schemas'),  // JSON Schema output
 ];
 ```
 
@@ -65,7 +67,21 @@ Options:
 - `--dry-run` - Preview changes without writing files
 - `-v` - Verbose output
 
-### 3. Use your DTOs
+### 3. Generate TypeScript interfaces
+
+```bash
+php artisan dto:typescript
+php artisan dto:typescript --multiple-files --readonly
+```
+
+### 4. Generate JSON Schema
+
+```bash
+php artisan dto:jsonschema
+php artisan dto:jsonschema --multiple-files
+```
+
+### 5. Use your DTOs
 
 ```php
 use App\Dto\UserDto;
@@ -77,6 +93,53 @@ $user = new UserDto([
 ]);
 
 return response()->json($user->toArray());
+```
+
+## Request Integration
+
+### DtoFormRequest
+
+```php
+use PhpCollective\LaravelDto\Http\DtoFormRequest;
+
+class StoreUserRequest extends DtoFormRequest
+{
+    protected string $dtoClass = UserDto::class;
+
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+        ];
+    }
+}
+
+// In controller:
+public function store(StoreUserRequest $request): JsonResponse
+{
+    $dto = $request->toDto();
+    // ...
+}
+```
+
+### DtoResolver
+
+Register once (e.g. in `AppServiceProvider::boot()`):
+
+```php
+use PhpCollective\LaravelDto\Http\DtoResolver;
+
+DtoResolver::register();
+```
+
+Then inject DTOs directly:
+
+```php
+public function store(UserDto $dto): JsonResponse
+{
+    // $dto is built from request data
+}
 ```
 
 ## Collections
