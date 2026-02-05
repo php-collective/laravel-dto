@@ -35,12 +35,17 @@ class DtoServiceProviderTest extends TestCase
         $this->assertArrayHasKey('config_path', $config);
         $this->assertArrayHasKey('output_path', $config);
         $this->assertArrayHasKey('namespace', $config);
+        $this->assertArrayHasKey('typescript_output_path', $config);
+        $this->assertArrayHasKey('jsonschema_output_path', $config);
     }
 
-    public function testCommandIsRegistered(): void
+    public function testCommandsAreRegistered(): void
     {
         $commands = Artisan::all();
 
         $this->assertArrayHasKey('dto:generate', $commands);
+        $this->assertArrayHasKey('dto:init', $commands);
+        $this->assertArrayHasKey('dto:typescript', $commands);
+        $this->assertArrayHasKey('dto:jsonschema', $commands);
     }
 }
