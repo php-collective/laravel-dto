@@ -153,6 +153,10 @@ Field::array('tags', 'string'), // string[] collection
 
 After generating, collection fields use Laravel's `Collection` class with all its methods (`filter`, `map`, `pluck`, etc.).
 
+## Validation Bridge
+
+Convert DTO validation rules to Laravel validation arrays with `DtoValidationRules::fromDto()`. Integrates directly with Form Requests. See [Usage Guide](docs/Usage.md#validation-bridge) for details.
+
 ## Supported Config Formats
 
 The package supports multiple config file formats:

@@ -132,6 +132,7 @@ class TypeScriptDtoCommand extends Command
             $result[$name] = [
                 'fields' => $fields,
                 'immutable' => $dto['immutable'] ?? false,
+                'readonlyProperties' => $dto['readonlyProperties'] ?? false,
             ];
         }
 

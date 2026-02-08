@@ -99,6 +99,46 @@ if ($validator->fails()) {
 }
 ```
 
+## Validation Bridge
+
+If your DTOs define `validationRules()`, you can automatically convert them to Laravel validation rules using `DtoValidationRules::fromDto()`:
+
+```php
+use PhpCollective\LaravelDto\Validation\DtoValidationRules;
+
+$dto = new UserDto();
+$rules = DtoValidationRules::fromDto($dto);
+// ['name' => ['required', 'min:2', 'max:255'], 'age' => ['gte:0', 'lte:150']]
+```
+
+### Integration with FormRequest
+
+```php
+use Illuminate\Foundation\Http\FormRequest;
+use PhpCollective\LaravelDto\Validation\DtoValidationRules;
+
+class StoreUserRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return DtoValidationRules::fromDto(new UserDto());
+    }
+}
+```
+
+### Rule Mapping
+
+| DTO Rule     | Laravel Rule | Context          |
+|--------------|-------------|------------------|
+| `required`   | `required`  | Field presence   |
+| `minLength`  | `min:N`     | String length    |
+| `maxLength`  | `max:N`     | String length    |
+| `min`        | `gte:N`     | Numeric minimum  |
+| `max`        | `lte:N`     | Numeric maximum  |
+| `pattern`    | `regex:...` | Regex validation |
+
+Fields with no recognized rules are excluded from the output.
+
 ## Form Requests
 
 Combine with Form Requests for clean validation:
