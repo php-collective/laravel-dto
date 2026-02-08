@@ -2,3 +2,9 @@ parameters:
 	level: 8
 	paths:
 		- src/
+	ignoreErrors:
+		# validationRules() will be available after php-collective/dto next release
+		-
+			identifier: method.notFound
+			path: src/Validation/DtoValidationRules.php
+			reportUnmatched: false
