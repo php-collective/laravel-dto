@@ -95,6 +95,103 @@ $user = new UserDto([
 return response()->json($user->toArray());
 ```
 
+## Eloquent Integration
+
+### Attribute Casting
+
+```php
+use App\Dto\ProfileDto;
+use App\Dto\TagDto;
+use PhpCollective\LaravelDto\Eloquent\DtoCast;
+use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+use PhpCollective\LaravelDto\Eloquent\HasDtoCasts;
+
+class User extends Model
+{
+    protected $casts = [
+        'profile' => DtoCast::class . ':' . ProfileDto::class,
+        'tags' => DtoCollectionCast::class . ':' . TagDto::class,
+    ];
+}
+
+$user = User::firstOrFail();
+$profile = $user->profile;       // ProfileDto instance
+$tags = $user->tags;             // Collection<TagDto>|null
+```
+
+Or opt into automatic casts:
+
+```php
+class User extends Model
+{
+    use HasDtoCasts;
+
+    protected array $dtoCasts = [
+        'profile' => ProfileDto::class,
+        'tags' => [
+            'class' => TagDto::class,
+            'collection' => true,
+        ],
+    ];
+}
+```
+
+### Model to DTO
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\CreatesDtoFromModel;
+
+class User extends Model
+{
+    use CreatesDtoFromModel;
+
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+}
+
+$dto = $user->toDto();
+```
+
+You can also extend the base model:
+
+```php
+use PhpCollective\LaravelDto\Eloquent\DtoModel;
+
+class User extends DtoModel
+{
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+}
+```
+
+### Mapping Helpers
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\DtoMapper;
+
+$user = User::with('posts')->firstOrFail();
+$dto = DtoMapper::fromModel($user, UserDto::class, relations: ['posts']);
+
+$dtos = DtoMapper::fromCollection(User::query()->get(), UserDto::class);
+$paginator = DtoMapper::fromPaginator(User::query()->paginate(), UserDto::class);
+```
+
+### API Resources
+
+```php
+use PhpCollective\LaravelDto\Http\DtoResource;
+
+return new DtoResource($dto);
+// or
+return DtoResource::collection($dtos);
+```
+
 ## Request Integration
 
 ### DtoFormRequest

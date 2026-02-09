@@ -26,12 +26,65 @@ class UserController extends Controller
 ### From Eloquent Models
 
 ```php
+use App\Dto\ProfileDto;
+use App\Dto\TagDto;
+use PhpCollective\LaravelDto\Eloquent\CreatesDtoFromModel;
+use PhpCollective\LaravelDto\Eloquent\DtoCast;
+use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+use PhpCollective\LaravelDto\Eloquent\HasDtoCasts;
+
+class User extends Model
+{
+    use CreatesDtoFromModel;
+
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+
+    protected $casts = [
+        'profile' => DtoCast::class . ':' . ProfileDto::class,
+        'tags' => DtoCollectionCast::class . ':' . TagDto::class,
+    ];
+}
+
 public function show(int $id): JsonResponse
 {
     $user = User::findOrFail($id);
-    $dto = new UserDto($user->toArray());
+$dto = $user->toDto();
 
-    return response()->json($dto);
+return response()->json($dto);
+}
+```
+
+If you prefer, you can use `HasDtoCasts` to avoid repeating cast class names:
+
+```php
+class User extends Model
+{
+    use HasDtoCasts;
+
+    protected array $dtoCasts = [
+        'profile' => ProfileDto::class,
+        'tags' => [
+            'class' => TagDto::class,
+            'collection' => true,
+        ],
+    ];
+}
+```
+
+Or extend the base model if you prefer:
+
+```php
+use PhpCollective\LaravelDto\Eloquent\DtoModel;
+
+class User extends DtoModel
+{
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
 }
 ```
 
@@ -201,20 +254,30 @@ public function store(UserDto $dto): JsonResponse
 }
 ```
 
+## DTO Mapping Helpers
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\DtoMapper;
+
+$dto = DtoMapper::fromModel($user, UserDto::class, relations: ['posts']);
+
+$dtos = DtoMapper::fromCollection(User::query()->get(), UserDto::class);
+$paginator = DtoMapper::fromPaginator(User::query()->paginate(), UserDto::class);
+```
+
+When you pass `relations`, the mapper calls `loadMissing()` on the model/collection before converting to arrays.
+
 ## API Resources
 
 Use DTOs with API Resources:
 
 ```php
-// app/Http/Resources/UserResource.php
-class UserResource extends JsonResource
-{
-    public function toArray($request): array
-    {
-        $dto = new UserDto($this->resource->toArray());
-        return $dto->toArray();
-    }
-}
+use PhpCollective\LaravelDto\Http\DtoResource;
+
+return new DtoResource($dto);
+// or
+return DtoResource::collection($dtos);
 ```
 
 ## Service Layer Pattern
