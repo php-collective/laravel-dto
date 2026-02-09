@@ -28,7 +28,7 @@ class AutoUser extends Model
     protected $guarded = [];
 
     /**
-     * @var array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class: class-string<\PhpCollective\Dto\Dto\AbstractDto>, collection?: bool}>
+     * @var array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class?: mixed, collection?: bool}>
      */
     protected array $dtoCasts = [
         'profile' => TestDto::class,

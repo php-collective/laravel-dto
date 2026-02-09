@@ -21,7 +21,7 @@ trait HasDtoCasts
     /**
      * @throws \InvalidArgumentException
      *
-     * @return array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class: class-string<\PhpCollective\Dto\Dto\AbstractDto>, collection?: bool}>
+     * @return array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class?: mixed, collection?: bool}>
      */
     protected function getDtoCasts(): array
     {
@@ -38,7 +38,7 @@ trait HasDtoCasts
     }
 
     /**
-     * @param array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class: class-string<\PhpCollective\Dto\Dto\AbstractDto>, collection?: bool}> $dtoCasts
+     * @param array<string, class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class?: mixed, collection?: bool}> $dtoCasts
      *
      * @return array<string, string>
      */
@@ -54,7 +54,7 @@ trait HasDtoCasts
 
     /**
      * @param string $attribute
-     * @param class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class: class-string<\PhpCollective\Dto\Dto\AbstractDto>, collection?: bool} $config
+     * @param class-string<\PhpCollective\Dto\Dto\AbstractDto>|array{class?: mixed, collection?: bool} $config
      *
      * @throws \InvalidArgumentException
      */
