@@ -10,16 +10,14 @@ use PhpCollective\Dto\Dto\AbstractDto;
 trait CreatesDtoFromModel
 {
     /**
-     * @template T of \PhpCollective\Dto\Dto\AbstractDto
-     *
-     * @param class-string<T>|null $dtoClass
+     * @param class-string<\PhpCollective\Dto\Dto\AbstractDto>|null $dtoClass
      * @param bool $includeRelations
      * @param bool $ignoreMissing
      * @param string|null $type
      *
      * @throws \InvalidArgumentException
      *
-     * @return T
+     * @return \PhpCollective\Dto\Dto\AbstractDto
      */
     public function toDto(
         ?string $dtoClass = null,
