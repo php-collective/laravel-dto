@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use PhpCollective\LaravelDto\DtoServiceProvider;
+use PhpCollective\LaravelDto\Test\Fixtures\Models\AutoUser;
 use PhpCollective\LaravelDto\Test\Fixtures\Models\User;
 use PhpCollective\LaravelDto\Test\Fixtures\TestDto;
 
@@ -108,5 +109,19 @@ class EloquentDtoIntegrationTest extends TestCase
         $this->assertSame(['name' => 'Mark'], $dto->data['profile']);
         $this->assertSame([['name' => 'alpha']], $dto->data['tags']);
         $this->assertSame($user->id, $dto->data['id']);
+    }
+
+    public function testAutoDtoCastsMergeIntoModelCasts(): void
+    {
+        AutoUser::create([
+            'profile' => ['name' => 'Auto'],
+            'tags' => [['name' => 'tag']],
+        ]);
+
+        $user = AutoUser::query()->firstOrFail();
+
+        $this->assertInstanceOf(TestDto::class, $user->profile);
+        $this->assertSame(['name' => 'Auto'], $user->profile->data);
+        $this->assertSame(['name' => 'tag'], $user->tags->first()->data);
     }
 }

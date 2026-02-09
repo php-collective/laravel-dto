@@ -9,4 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 abstract class DtoModel extends Model
 {
     use CreatesDtoFromModel;
+    use HasDtoCasts;
 }

@@ -104,6 +104,7 @@ use App\Dto\ProfileDto;
 use App\Dto\TagDto;
 use PhpCollective\LaravelDto\Eloquent\DtoCast;
 use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+use PhpCollective\LaravelDto\Eloquent\HasDtoCasts;
 
 class User extends Model
 {
@@ -116,6 +117,23 @@ class User extends Model
 $user = User::firstOrFail();
 $profile = $user->profile;       // ProfileDto instance
 $tags = $user->tags;             // Collection<TagDto>|null
+```
+
+Or opt into automatic casts:
+
+```php
+class User extends Model
+{
+    use HasDtoCasts;
+
+    protected array $dtoCasts = [
+        'profile' => ProfileDto::class,
+        'tags' => [
+            'class' => TagDto::class,
+            'collection' => true,
+        ],
+    ];
+}
 ```
 
 ### Model to DTO

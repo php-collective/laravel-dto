@@ -31,6 +31,7 @@ use App\Dto\TagDto;
 use PhpCollective\LaravelDto\Eloquent\CreatesDtoFromModel;
 use PhpCollective\LaravelDto\Eloquent\DtoCast;
 use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+use PhpCollective\LaravelDto\Eloquent\HasDtoCasts;
 
 class User extends Model
 {
@@ -50,9 +51,26 @@ class User extends Model
 public function show(int $id): JsonResponse
 {
     $user = User::findOrFail($id);
-    $dto = $user->toDto();
+$dto = $user->toDto();
 
-    return response()->json($dto);
+return response()->json($dto);
+}
+```
+
+If you prefer, you can use `HasDtoCasts` to avoid repeating cast class names:
+
+```php
+class User extends Model
+{
+    use HasDtoCasts;
+
+    protected array $dtoCasts = [
+        'profile' => ProfileDto::class,
+        'tags' => [
+            'class' => TagDto::class,
+            'collection' => true,
+        ],
+    ];
 }
 ```
 
