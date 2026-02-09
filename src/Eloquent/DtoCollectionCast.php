@@ -29,6 +29,14 @@ class DtoCollectionCast implements CastsAttributes
     ) {
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array<string, mixed> $attributes
+     *
+     * @return \Illuminate\Support\Collection<int, \PhpCollective\Dto\Dto\AbstractDto>|null
+     */
     public function get(Model $model, string $key, mixed $value, array $attributes): ?Collection
     {
         if ($value === null) {
@@ -71,6 +79,14 @@ class DtoCollectionCast implements CastsAttributes
         return (new Json())->encode($items);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array<string, mixed> $attributes
+     *
+     * @throws \InvalidArgumentException
+     */
     public function serialize(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if ($value === null) {

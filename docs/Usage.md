@@ -56,6 +56,20 @@ public function show(int $id): JsonResponse
 }
 ```
 
+Or extend the base model if you prefer:
+
+```php
+use PhpCollective\LaravelDto\Eloquent\DtoModel;
+
+class User extends DtoModel
+{
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+}
+```
+
 ## Collections
 
 The `DtoServiceProvider` automatically registers Laravel's `Illuminate\Support\Collection` as the collection type for DTO collection fields. No manual setup is needed.

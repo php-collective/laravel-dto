@@ -137,6 +137,20 @@ class User extends Model
 $dto = $user->toDto();
 ```
 
+You can also extend the base model:
+
+```php
+use PhpCollective\LaravelDto\Eloquent\DtoModel;
+
+class User extends DtoModel
+{
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+}
+```
+
 ## Request Integration
 
 ### DtoFormRequest

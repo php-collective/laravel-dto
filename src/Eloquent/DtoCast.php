@@ -64,6 +64,12 @@ class DtoCast implements CastsAttributes
         throw new InvalidArgumentException("DTO cast for [{$key}] expects a DTO, array, or Arrayable value.");
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array<string, mixed> $attributes
+     */
     public function serialize(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if ($value === null) {
