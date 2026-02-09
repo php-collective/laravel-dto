@@ -254,20 +254,30 @@ public function store(UserDto $dto): JsonResponse
 }
 ```
 
+## DTO Mapping Helpers
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\DtoMapper;
+
+$dto = DtoMapper::fromModel($user, UserDto::class, relations: ['posts']);
+
+$dtos = DtoMapper::fromCollection(User::query()->get(), UserDto::class);
+$paginator = DtoMapper::fromPaginator(User::query()->paginate(), UserDto::class);
+```
+
+When you pass `relations`, the mapper calls `loadMissing()` on the model/collection before converting to arrays.
+
 ## API Resources
 
 Use DTOs with API Resources:
 
 ```php
-// app/Http/Resources/UserResource.php
-class UserResource extends JsonResource
-{
-    public function toArray($request): array
-    {
-        $dto = new UserDto($this->resource->toArray());
-        return $dto->toArray();
-    }
-}
+use PhpCollective\LaravelDto\Http\DtoResource;
+
+return new DtoResource($dto);
+// or
+return DtoResource::collection($dtos);
 ```
 
 ## Service Layer Pattern

@@ -169,6 +169,29 @@ class User extends DtoModel
 }
 ```
 
+### Mapping Helpers
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\DtoMapper;
+
+$user = User::with('posts')->firstOrFail();
+$dto = DtoMapper::fromModel($user, UserDto::class, relations: ['posts']);
+
+$dtos = DtoMapper::fromCollection(User::query()->get(), UserDto::class);
+$paginator = DtoMapper::fromPaginator(User::query()->paginate(), UserDto::class);
+```
+
+### API Resources
+
+```php
+use PhpCollective\LaravelDto\Http\DtoResource;
+
+return new DtoResource($dto);
+// or
+return DtoResource::collection($dtos);
+```
+
 ## Request Integration
 
 ### DtoFormRequest
