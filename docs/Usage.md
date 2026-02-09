@@ -26,10 +26,31 @@ class UserController extends Controller
 ### From Eloquent Models
 
 ```php
+use App\Dto\ProfileDto;
+use App\Dto\TagDto;
+use PhpCollective\LaravelDto\Eloquent\CreatesDtoFromModel;
+use PhpCollective\LaravelDto\Eloquent\DtoCast;
+use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+
+class User extends Model
+{
+    use CreatesDtoFromModel;
+
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+
+    protected $casts = [
+        'profile' => DtoCast::class . ':' . ProfileDto::class,
+        'tags' => DtoCollectionCast::class . ':' . TagDto::class,
+    ];
+}
+
 public function show(int $id): JsonResponse
 {
     $user = User::findOrFail($id);
-    $dto = new UserDto($user->toArray());
+    $dto = $user->toDto();
 
     return response()->json($dto);
 }

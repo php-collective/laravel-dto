@@ -95,6 +95,48 @@ $user = new UserDto([
 return response()->json($user->toArray());
 ```
 
+## Eloquent Integration
+
+### Attribute Casting
+
+```php
+use App\Dto\ProfileDto;
+use App\Dto\TagDto;
+use PhpCollective\LaravelDto\Eloquent\DtoCast;
+use PhpCollective\LaravelDto\Eloquent\DtoCollectionCast;
+
+class User extends Model
+{
+    protected $casts = [
+        'profile' => DtoCast::class . ':' . ProfileDto::class,
+        'tags' => DtoCollectionCast::class . ':' . TagDto::class,
+    ];
+}
+
+$user = User::firstOrFail();
+$profile = $user->profile;       // ProfileDto instance
+$tags = $user->tags;             // Collection<TagDto>|null
+```
+
+### Model to DTO
+
+```php
+use App\Dto\UserDto;
+use PhpCollective\LaravelDto\Eloquent\CreatesDtoFromModel;
+
+class User extends Model
+{
+    use CreatesDtoFromModel;
+
+    protected function getDtoClass(): ?string
+    {
+        return UserDto::class;
+    }
+}
+
+$dto = $user->toDto();
+```
+
 ## Request Integration
 
 ### DtoFormRequest
