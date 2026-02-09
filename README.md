@@ -155,7 +155,7 @@ After generating, collection fields use Laravel's `Collection` class with all it
 
 ## Validation Bridge
 
-Convert DTO validation rules to Laravel validation arrays with `DtoValidationRules::fromDto()`. Integrates directly with Form Requests. See [Usage Guide](docs/Usage.md#validation-bridge) for details.
+Convert DTO validation rules to Laravel validation arrays with `DtoValidationRules::fromDto()`. Integrates directly with Form Requests. See [Usage Guide](docs/README.md#validation-bridge) for details.
 
 ## Supported Config Formats
 
