@@ -49,7 +49,7 @@ return [
 
 ### PHP Format (default)
 
-Create `config/dtos.php` (use `dtos.php` to avoid conflict with package config).
+Create `config/dto.php`.
 This is the default format when running `php artisan dto:init`:
 
 ```php
@@ -73,7 +73,7 @@ return Schema::create()
 
 ### XML Format
 
-Create `config/dto.xml` or `config/dtos.xml`:
+Create `config/dto.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -135,8 +135,8 @@ app/
 │   ├── UserDto.php          # Generated
 │   └── RoleDto.php          # Generated
 config/
-├── dto.php                  # Package config
-└── dtos.xml                 # DTO definitions
+├── dto.php                  # DTO definitions (or package config if published)
+└── dto.xml                  # Alternative: XML format
 ```
 
 ## Multiple Config Files

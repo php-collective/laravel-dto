@@ -57,8 +57,7 @@ class GenerateDtoCommand extends Command
             $this->error("No DTO configuration files found in: {$configPath}");
             $this->line('');
             $this->line('Expected one of:');
-            $this->line('  - dtos.php, dtos.xml, dtos.yml, dtos.yaml');
-            $this->line('  - dto.xml, dto.yml, dto.yaml');
+            $this->line('  - dto.php, dto.xml, dto.yml, dto.yaml');
             $this->line('  - dto/ subdirectory with config files');
             $this->line('');
             $this->line('Run "php artisan dto:init" to create a starter configuration.');
@@ -96,7 +95,18 @@ class GenerateDtoCommand extends Command
     {
         $sep = str_ends_with($configPath, '/') ? '' : '/';
 
-        // Check for dtos.* files first (recommended to avoid Laravel config conflict)
+        // Standard dto.* naming (preferred)
+        if (file_exists($configPath . $sep . 'dto.php')) {
+            return new PhpEngine();
+        }
+        if (file_exists($configPath . $sep . 'dto.xml')) {
+            return new XmlEngine();
+        }
+        if (file_exists($configPath . $sep . 'dto.yml') || file_exists($configPath . $sep . 'dto.yaml')) {
+            return new YamlEngine();
+        }
+
+        // Legacy dtos.* naming (backward compatibility)
         if (file_exists($configPath . $sep . 'dtos.php')) {
             return new PhpEngine();
         }
@@ -104,14 +114,6 @@ class GenerateDtoCommand extends Command
             return new XmlEngine();
         }
         if (file_exists($configPath . $sep . 'dtos.yml') || file_exists($configPath . $sep . 'dtos.yaml')) {
-            return new YamlEngine();
-        }
-
-        // Fall back to dto.* files (XML/YAML only - dto.php conflicts with Laravel config)
-        if (file_exists($configPath . $sep . 'dto.xml')) {
-            return new XmlEngine();
-        }
-        if (file_exists($configPath . $sep . 'dto.yml') || file_exists($configPath . $sep . 'dto.yaml')) {
             return new YamlEngine();
         }
 

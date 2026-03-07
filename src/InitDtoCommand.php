@@ -36,7 +36,7 @@ class InitDtoCommand extends Command
             $format = 'yaml';
         }
 
-        $filename = $format === 'php' ? 'dtos.php' : 'dto.' . $format;
+        $filename = 'dto.' . $format;
         $filePath = rtrim($configPath, '/') . '/' . $filename;
 
         if (file_exists($filePath) && !$this->option('force')) {
