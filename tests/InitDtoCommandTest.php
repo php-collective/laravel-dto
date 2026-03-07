@@ -65,9 +65,9 @@ class InitDtoCommandTest extends TestCase
         $this->artisan('dto:init')
             ->assertSuccessful();
 
-        $this->assertFileExists($this->tempDir . '/dtos.php');
+        $this->assertFileExists($this->tempDir . '/dto.php');
 
-        $content = file_get_contents($this->tempDir . '/dtos.php');
+        $content = file_get_contents($this->tempDir . '/dto.php');
         $this->assertStringContainsString('return [', $content);
         $this->assertStringContainsString("'name' => 'User'", $content);
     }
@@ -98,7 +98,7 @@ class InitDtoCommandTest extends TestCase
 
     public function testInitFailsWhenFileExists(): void
     {
-        file_put_contents($this->tempDir . '/dtos.php', '<?php return [];');
+        file_put_contents($this->tempDir . '/dto.php', '<?php return [];');
 
         $this->artisan('dto:init')
             ->assertFailed()
@@ -107,12 +107,12 @@ class InitDtoCommandTest extends TestCase
 
     public function testInitOverwritesWithForce(): void
     {
-        file_put_contents($this->tempDir . '/dtos.php', '<?php return [];');
+        file_put_contents($this->tempDir . '/dto.php', '<?php return [];');
 
         $this->artisan('dto:init', ['--force' => true])
             ->assertSuccessful();
 
-        $content = file_get_contents($this->tempDir . '/dtos.php');
+        $content = file_get_contents($this->tempDir . '/dto.php');
         $this->assertStringContainsString("'name' => 'User'", $content);
     }
 
